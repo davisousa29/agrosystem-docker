@@ -1,0 +1,7 @@
+.env
+backend/.env
+backend/vendor/
+backend/node_modules/
+backend/storage/logs/*
+backend/.phpunit.cache/
+.DS_Store

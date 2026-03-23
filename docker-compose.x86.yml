@@ -1,0 +1,21 @@
+# Override para arquitetura x86_64 (Intel/AMD — servidores Linux padrão)
+# Uso: docker compose -f docker-compose.yml -f docker-compose.x86.yml up -d
+
+services:
+  postgres:
+    platform: linux/amd64
+    image: postgres:16-alpine
+
+  redis:
+    platform: linux/amd64
+    image: redis:7-alpine
+
+  backend:
+    build:
+      platforms:
+        - linux/amd64
+
+  nginx:
+    build:
+      platforms:
+        - linux/amd64

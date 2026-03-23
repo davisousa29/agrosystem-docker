@@ -1,0 +1,21 @@
+# Override para arquitetura ARM64 (Apple Silicon M1/M2/M3, AWS Graviton)
+# Uso: docker compose -f docker-compose.yml -f docker-compose.arm64.yml up -d
+
+services:
+  postgres:
+    platform: linux/arm64
+    image: postgres:16-alpine
+
+  redis:
+    platform: linux/arm64
+    image: redis:7-alpine
+
+  backend:
+    build:
+      platforms:
+        - linux/arm64
+
+  nginx:
+    build:
+      platforms:
+        - linux/arm64
