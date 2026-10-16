@@ -19,3 +19,13 @@ services:
     build:
       platforms:
         - linux/arm64
+
+  scheduler:
+    build:
+      platforms:
+        - linux/arm64
+
+  queue:
+    build:
+      platforms:
+        - linux/arm64
