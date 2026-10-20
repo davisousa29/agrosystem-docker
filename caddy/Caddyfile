@@ -1,0 +1,19 @@
+{$API_DOMAIN} {
+	# Mesma pasta pública do Laravel que o PHP-FPM enxerga no container backend
+	root * /var/www/html/public
+
+	encode zstd gzip
+
+	request_body {
+		max_size 20MB
+	}
+
+	# Repassa ao PHP-FPM; o que não for arquivo existente vai para o index.php
+	php_fastcgi backend:9000
+	file_server
+
+	header {
+		-Server
+		Strict-Transport-Security "max-age=31536000"
+	}
+}
