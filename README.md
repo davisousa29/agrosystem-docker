@@ -7,7 +7,7 @@ Monorepo contendo a infraestrutura base do AgroSystem: uma plataforma de gestão
 ## Estrutura do projeto
 
 ```
-agro-system/
+colchete-system/
 ├── docker-compose.yml           # Orquestrador principal
 ├── docker-compose.arm64.yml     # Override para Apple Silicon / AWS Graviton
 ├── docker-compose.x86.yml       # Override para Intel / AMD
@@ -20,7 +20,7 @@ agro-system/
 ├── nginx/                       # Proxy reverso
 │   ├── Dockerfile
 │   └── nginx.conf
-├── app-consultorAgro/           # App React Native (Expo) — consultor agropecuário
+├── colchete-app/           # App React Native (Expo) — consultor agropecuário
 └── app-fazendeiro/              # App React Native (Expo) — fazendeiro
 ```
 
@@ -51,7 +51,7 @@ agro-system/
 
 ```bash
 git clone <url-do-repositorio>
-cd agro-system
+cd colchete-system
 ```
 
 ### 2. Instalar o Laravel dentro da pasta backend
@@ -84,8 +84,8 @@ cp .env.example .env
 Edite o `.env` da raiz e defina as senhas:
 
 ```dotenv
-DB_DATABASE=agro_db
-DB_USERNAME=agro_user
+DB_DATABASE=colchete_db
+DB_USERNAME=colchete_user
 DB_PASSWORD=sua_senha_aqui
 
 REDIS_PASSWORD=sua_senha_redis_aqui
@@ -109,8 +109,8 @@ APP_URL=http://localhost
 DB_CONNECTION=pgsql
 DB_HOST=postgres
 DB_PORT=5432
-DB_DATABASE=agro_db
-DB_USERNAME=agro_user
+DB_DATABASE=colchete_db
+DB_USERNAME=colchete_user
 DB_PASSWORD=sua_senha_aqui
 
 SESSION_DRIVER=redis
@@ -177,10 +177,10 @@ make ps
 Todos os containers devem estar com status `Up` ou `healthy`:
 
 ```
-agro_nginx     Up    0.0.0.0:80->80/tcp
-agro_backend   Up
-agro_postgres  Up (healthy)
-agro_redis     Up (healthy)
+colchete_nginx     Up    0.0.0.0:80->80/tcp
+colchete_backend   Up
+colchete_postgres  Up (healthy)
+colchete_redis     Up (healthy)
 ```
 
 Acesse [http://localhost](http://localhost) — deve aparecer a tela de boas-vindas do Laravel.
@@ -256,6 +256,6 @@ Este repositório contém apenas a infraestrutura base. Os projetos de código f
 
 | Repositório              | Descrição                                 |
 |--------------------------|-------------------------------------------|
-| `agro-backend`           | API Laravel — código da aplicação         |
-| `agro-app-consultorAgro` | App React Native — consultor agropecuário |
+| `colchete-backend`           | API Laravel — código da aplicação         |
+| `colchete-app` | App React Native — consultor agropecuário |
 | `agro-app-fazendeiro`    | App React Native — fazendeiro             |

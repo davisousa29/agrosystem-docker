@@ -1,3 +1,7 @@
+# Nome fixo do projeto: os volumes, a rede e as imagens passam a ser colchete_*,
+# independentemente do nome da pasta
+name: colchete
+
 services:
 
   # ── Nginx — proxy reverso ────────────────────────────────────────────────────
@@ -5,33 +9,33 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    container_name: agro_nginx
+    container_name: colchete_nginx
     ports:
       - "80:80"
     volumes:
-      - ../agro-backend:/var/www/html
+      - ../colchete-backend:/var/www/html
     depends_on:
       - backend
     networks:
-      - agro_network
+      - colchete_network
     restart: unless-stopped
 
   # ── Laravel — API ─────────────────────────────────────────────────────────────
   backend:
     build:
-      context: ../agro-backend
+      context: ../colchete-backend
       dockerfile: Dockerfile
       target: development
-    container_name: agro_backend
+    container_name: colchete_backend
     env_file:
-      - ../agro-backend/.env
+      - ../colchete-backend/.env
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
       REDIS_HOST: redis
       REDIS_PORT: 6379
     volumes:
-      - ../agro-backend:/var/www/html
+      - ../colchete-backend:/var/www/html
       - vendor_cache:/var/www/html/vendor
     depends_on:
       postgres:
@@ -39,26 +43,26 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - agro_network
+      - colchete_network
     restart: unless-stopped
 
   # ── Agendador — tarefas programadas do Laravel ───────────────────────────────
   scheduler:
     build:
-      context: ../agro-backend
+      context: ../colchete-backend
       dockerfile: Dockerfile
       target: development
-    container_name: agro_scheduler
+    container_name: colchete_scheduler
     command: php artisan schedule:work
     env_file:
-      - ../agro-backend/.env
+      - ../colchete-backend/.env
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
       REDIS_HOST: redis
       REDIS_PORT: 6379
     volumes:
-      - ../agro-backend:/var/www/html
+      - ../colchete-backend:/var/www/html
       - vendor_cache:/var/www/html/vendor
     depends_on:
       backend:
@@ -68,26 +72,26 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - agro_network
+      - colchete_network
     restart: unless-stopped
 
   # ── Fila — envia os e-mails em segundo plano ─────────────────────────────────
   queue:
     build:
-      context: ../agro-backend
+      context: ../colchete-backend
       dockerfile: Dockerfile
       target: development
-    container_name: agro_queue
+    container_name: colchete_queue
     command: php artisan queue:work --sleep=3 --max-time=3600
     env_file:
-      - ../agro-backend/.env
+      - ../colchete-backend/.env
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
       REDIS_HOST: redis
       REDIS_PORT: 6379
     volumes:
-      - ../agro-backend:/var/www/html
+      - ../colchete-backend:/var/www/html
       - vendor_cache:/var/www/html/vendor
     depends_on:
       backend:
@@ -97,13 +101,13 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - agro_network
+      - colchete_network
     restart: unless-stopped
 
   # ── PostgreSQL ─────────────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
-    container_name: agro_postgres
+    container_name: colchete_postgres
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
@@ -118,13 +122,13 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - agro_network
+      - colchete_network
     restart: unless-stopped
 
   # ── Redis ──────────────────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
-    container_name: agro_redis
+    container_name: colchete_redis
     command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
     volumes:
       - redis_data:/data
@@ -136,11 +140,11 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - agro_network
+      - colchete_network
     restart: unless-stopped
 
 networks:
-  agro_network:
+  colchete_network:
     driver: bridge
 
 volumes:
