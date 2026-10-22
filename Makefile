@@ -9,7 +9,9 @@ endif
 
 COMPOSE = docker compose $(COMPOSE_OVERRIDE)
 
-.PHONY: up down build logs shell migrate fresh seed test key ps
+# ── Desenvolvimento ─────────────────────────────────────────────────────────────
+
+.PHONY: up down build logs shell migrate fresh seed test key ps up-arm up-x86
 
 # Detecta e sobe para a arquitetura correta automaticamente
 up:
@@ -53,11 +55,12 @@ up-arm:
 # Sobe explicitamente para x86_64
 up-x86:
 	docker compose -f docker-compose.yml -f docker-compose.x86.yml up -d
+
 # ── Produção (usar só no servidor) ──────────────────────────────────────────────
 # Um único .env (o do backend) alimenta o Laravel e as variáveis deste compose
 PROD = docker compose --env-file ../colchete-backend/.env -f docker-compose.prod.yml
 
-.PHONY: prod-build prod-up prod-down prod-ps prod-logs prod-shell prod-migrate prod-optimize
+.PHONY: prod-build prod-up prod-down prod-ps prod-logs prod-shell prod-migrate prod-optimize prod-deploy
 
 prod-build:
 	$(PROD) build --pull
@@ -77,9 +80,14 @@ prod-logs:
 prod-shell:
 	$(PROD) exec backend sh
 
+# Como www-data (o mesmo usuário do PHP), para não criar arquivos de log do root
 prod-migrate:
-	$(PROD) exec backend php artisan migrate --force
+	$(PROD) exec -u www-data backend php artisan migrate --force
 
 # Gera os caches de configuração e rotas (como www-data, o mesmo usuário do PHP)
 prod-optimize:
 	$(PROD) exec -u www-data backend php artisan optimize
+
+# Atualiza a produção: pull, backup, build, migrações e caches (ver scripts/deploy.sh)
+prod-deploy:
+	./scripts/deploy.sh
